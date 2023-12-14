@@ -1,5 +1,6 @@
 package com.dicoding.picodiploma.loginwithanimation.data.repository
 
+import android.util.Log
 import androidx.lifecycle.liveData
 import com.dicoding.picodiploma.loginwithanimation.api.ApiService
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserModel
@@ -39,6 +40,22 @@ class UserRepository private constructor(
             emit(error.message?.let { Result.Error(it) })
         }
     }
+
+    fun getStory(token: String) = liveData {
+        emit(Result.Loading)
+        try {
+            val successResponse = apiService.getStories(token)
+            if (successResponse.error == false) {
+                emit(Result.Success(successResponse))
+            } else {
+                emit(Result.Error(successResponse.message ?: "Kesalahan tidak diketahui"))
+            }
+        } catch (e: Exception) {
+            Log.d("ListStory", "getStory: ${e.message.toString()} ")
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
 
     suspend fun saveSession(user: UserModel) {
         userPreference.saveSession(user)

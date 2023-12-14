@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.loginwithanimation.customview
+package com.dicoding.picodiploma.loginwithanimation.passwordview
 
 import android.content.Context
 import android.util.AttributeSet
