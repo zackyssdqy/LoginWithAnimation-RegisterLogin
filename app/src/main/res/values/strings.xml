@@ -16,5 +16,7 @@
     <string name="upload">Upload</string>
     <string name="title">Title Story</string>
     <string name="description">Story Description</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
 
 </resources>

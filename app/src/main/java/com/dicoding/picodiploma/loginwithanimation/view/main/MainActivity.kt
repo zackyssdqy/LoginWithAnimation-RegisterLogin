@@ -1,13 +1,9 @@
 package com.dicoding.picodiploma.loginwithanimation.view.main
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -19,9 +15,10 @@ import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.Result
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
-import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
-import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityMainBinding
+import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.storyadd.AddStoryActivity
+import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -44,17 +41,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.toolbar.inflateMenu(R.menu.option_menu)
-        binding.toolbar.setOnMenuItemClickListener{menuItem ->
-            when(menuItem.itemId){
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
                 R.id.logout -> {
                     viewModel.logout()
                     val intent = Intent(this, WelcomeActivity::class.java)
                     startActivity(intent)
                     true
                 }
+
                 else -> false
             }
         }
+        binding.uploadStory.setOnClickListener {
+            val intent = Intent(this, AddStoryActivity::class.java)
+            startActivity(intent)
+        }
+
         setupView()
         setupAction()
     }
@@ -88,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                     is Result.Loading -> {
                         showLoading(true)
                     }
+
                     is Result.Success -> {
                         val storyList = result.data.listStory
                         storyAdapter.submitList(storyList)
@@ -97,6 +101,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         showLoading(false)
                     }
+
                     is Result.Error -> {
                         showLoading(false)
                         Toast.makeText(this, result.error, Toast.LENGTH_SHORT).show()
@@ -114,7 +119,6 @@ class MainActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
-
 
 
 }

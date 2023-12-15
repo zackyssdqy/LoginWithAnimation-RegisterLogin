@@ -12,12 +12,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.dicoding.picodiploma.loginwithanimation.Result
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivitySignupBinding
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
-import com.dicoding.picodiploma.loginwithanimation.Result
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
-import com.dicoding.picodiploma.loginwithanimation.view.main.MainActivity
-import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 
 
 class SignupActivity : AppCompatActivity() {
@@ -65,10 +63,12 @@ class SignupActivity : AppCompatActivity() {
                             is Result.Loading -> {
                                 showLoading(true)
                             }
+
                             is Result.Success -> {
                                 showLoading(false)
                                 result.data.message.let {
-                                    Toast.makeText(this, result.data.message, Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this, result.data.message, Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                                 AlertDialog.Builder(this).apply {
                                     setTitle("Yeah!")
@@ -84,6 +84,7 @@ class SignupActivity : AppCompatActivity() {
                                     show()
                                 }
                             }
+
                             is Result.Error -> {
                                 showLoading(false)
                                 Toast.makeText(this, result.error, Toast.LENGTH_SHORT).show()
@@ -91,8 +92,7 @@ class SignupActivity : AppCompatActivity() {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 Toast.makeText(
                     this,
                     "Harap isi semua kolom",

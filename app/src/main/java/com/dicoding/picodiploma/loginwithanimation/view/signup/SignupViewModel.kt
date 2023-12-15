@@ -11,5 +11,6 @@ class SignupViewModel(private val repository: UserRepository) : ViewModel() {
     private val _registrationResult = MutableLiveData<SignupResponse>()
     val registrationResult: LiveData<SignupResponse> get() = _registrationResult
 
-    fun register(name: String, email: String, password: String) = repository.register(name, email, password)
+    fun register(name: String, email: String, password: String) =
+        repository.register(name, email, password)
 }

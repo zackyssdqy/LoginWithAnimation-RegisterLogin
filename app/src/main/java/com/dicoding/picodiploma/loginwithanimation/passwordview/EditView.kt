@@ -5,8 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.widget.addTextChangedListener
 
-class EditView(context: Context, attrs: AttributeSet) :
-    AppCompatEditText(context, attrs) {
+class EditView(context: Context, attrs: AttributeSet) : AppCompatEditText(context, attrs) {
     init {
         setOnTextChangedListener()
     }

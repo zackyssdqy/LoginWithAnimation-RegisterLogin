@@ -31,6 +31,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             )
         }
     }
+
     fun getUser(): Flow<UserModel> {
         return dataStore.data.map { preferences ->
             UserModel(
