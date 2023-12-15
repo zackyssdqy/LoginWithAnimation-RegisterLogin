@@ -43,7 +43,18 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }
-
+        binding.toolbar.inflateMenu(R.menu.option_menu)
+        binding.toolbar.setOnMenuItemClickListener{menuItem ->
+            when(menuItem.itemId){
+                R.id.logout -> {
+                    viewModel.logout()
+                    val intent = Intent(this, WelcomeActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
         setupView()
         setupAction()
     }
@@ -104,18 +115,6 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.option_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.logout -> {
-                viewModel.logout()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
 }

@@ -15,8 +15,9 @@ import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.ListStoryBinding
 import com.dicoding.picodiploma.loginwithanimation.response.ListStoryItem
+import com.dicoding.picodiploma.loginwithanimation.view.detailstory.StoryDetailActivity
 
-class StoryAdapter: ListAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = ListStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -28,7 +29,8 @@ class StoryAdapter: ListAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_C
         holder.bind(listStory)
     }
 
-    class MyViewHolder(private val binding: ListStoryBinding): RecyclerView.ViewHolder(binding.root) {
+    class MyViewHolder(private val binding: ListStoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(listStory: ListStoryItem) {
             binding.title.text = listStory.name
             binding.description.text = listStory.description
@@ -50,11 +52,11 @@ class StoryAdapter: ListAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_C
                         Pair(description, "description")
                     )
 
-//                val moveWithDataUser = Intent(itemView.context, DetailStoryActivity::class.java)
-//                moveWithDataUser.putExtra("PHOTO_URL", listStory.photoUrl)
-//                moveWithDataUser.putExtra("NAME", listStory.name)
-//                moveWithDataUser.putExtra("DESCRIPTION", listStory.description)
-//                itemView.context.startActivity(moveWithDataUser, optionsCompat.toBundle())
+                val moveWithDataUser = Intent(itemView.context, StoryDetailActivity::class.java)
+                moveWithDataUser.putExtra("IMAGE_URL", listStory.photoUrl)
+                moveWithDataUser.putExtra("NAME", listStory.name)
+                moveWithDataUser.putExtra("DESCRIPTION", listStory.description)
+                itemView.context.startActivity(moveWithDataUser, optionsCompat.toBundle())
             }
         }
     }
@@ -66,7 +68,10 @@ class StoryAdapter: ListAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_C
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
+            override fun areContentsTheSame(
+                oldItem: ListStoryItem,
+                newItem: ListStoryItem
+            ): Boolean {
                 return oldItem == newItem
             }
         }
