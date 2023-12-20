@@ -17,6 +17,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityMainBinding
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.map.MapsActivity
 import com.dicoding.picodiploma.loginwithanimation.view.storyadd.AddStoryActivity
 import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 import kotlinx.coroutines.flow.first
@@ -46,6 +47,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.logout -> {
                     viewModel.logout()
                     val intent = Intent(this, WelcomeActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.map -> {
+                    val intent = Intent(this, MapsActivity::class.java)
                     startActivity(intent)
                     true
                 }

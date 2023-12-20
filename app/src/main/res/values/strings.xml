@@ -18,5 +18,7 @@
     <string name="description">Story Description</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="map">map</string>
 
 </resources>

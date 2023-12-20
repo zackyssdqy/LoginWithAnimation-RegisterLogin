@@ -1,6 +1,8 @@
 package com.dicoding.picodiploma.loginwithanimation.data.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.dicoding.picodiploma.loginwithanimation.Result
 import com.dicoding.picodiploma.loginwithanimation.api.ApiService
@@ -8,6 +10,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.pref.UserModel
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.response.LoginResponse
 import com.dicoding.picodiploma.loginwithanimation.response.SignupResponse
+import com.dicoding.picodiploma.loginwithanimation.response.StoryResponse
 import com.dicoding.picodiploma.loginwithanimation.response.UploadStoryResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +20,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import java.io.File
+import java.net.UnknownHostException
 
 class UserRepository private constructor(
     private val userPreference: UserPreference,
@@ -78,6 +82,39 @@ class UserRepository private constructor(
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, UploadStoryResponse::class.java)
             emit(Result.Error(errorResponse.message))
+        }
+
+    }
+
+    private val _StoryWithLocation = MutableLiveData<StoryResponse>()
+    val StoryWithLocation: LiveData<StoryResponse> = _StoryWithLocation
+    fun getStoriesByMap(token : String) = liveData {
+        emit(Result.Loading)
+
+        try {
+            val storyResponse: StoryResponse = apiService.getStoriesWithLocation()
+
+            emit(Result.Success(storyResponse))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.message()
+
+            when (val code = e.code()) {
+                in 300..399 -> {
+                    emit(Result.Error("Need To Reconfigure. Please Contact Administrator"))
+                }
+
+                in 400..499 -> {
+                    emit(Result.Error("Request Error. code $code $errorBody"))
+                }
+
+                in 500..599 -> {
+                    emit(Result.Error("Server Error"))
+                }
+            }
+        } catch (e: UnknownHostException) {
+            emit(Result.Error("Error... Please check your connection"))
+        } catch (e: Exception) {
+            emit(Result.Error("Unknown Error"))
         }
 
     }
