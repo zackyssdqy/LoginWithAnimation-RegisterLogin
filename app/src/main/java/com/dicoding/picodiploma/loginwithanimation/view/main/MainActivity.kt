@@ -7,12 +7,10 @@ import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.loginwithanimation.R
-import com.dicoding.picodiploma.loginwithanimation.Result
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityMainBinding
@@ -39,6 +37,13 @@ class MainActivity : AppCompatActivity() {
             if (!user.isLogin) {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
+            } else {
+                val storyAdapter = StoryAdapter()
+                binding.rvListStory.adapter = storyAdapter
+
+                viewModel.getStory(user.token).observe(this) {
+                    storyAdapter.submitData(lifecycle, it)
+                }
             }
         }
         binding.toolbar.inflateMenu(R.menu.option_menu)
@@ -50,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
+
                 R.id.map -> {
                     val intent = Intent(this, MapsActivity::class.java)
                     startActivity(intent)
@@ -91,29 +97,8 @@ class MainActivity : AppCompatActivity() {
 
         val storyAdapter = StoryAdapter()
 
-        viewModel.getStory(token).observe(this) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        showLoading(true)
-                    }
-
-                    is Result.Success -> {
-                        val storyList = result.data.listStory
-                        storyAdapter.submitList(storyList)
-
-                        result.data.message.let {
-                            Toast.makeText(this, result.data.message, Toast.LENGTH_SHORT).show()
-                        }
-                        showLoading(false)
-                    }
-
-                    is Result.Error -> {
-                        showLoading(false)
-                        Toast.makeText(this, result.error, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+        viewModel.getStory(token).observe(this) {
+            storyAdapter.submitData(lifecycle, it)
         }
         binding.rvListStory?.apply {
             layoutManager = LinearLayoutManager(context)

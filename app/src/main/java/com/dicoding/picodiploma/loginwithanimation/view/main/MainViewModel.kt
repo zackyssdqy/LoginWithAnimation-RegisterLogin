@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserModel
 import com.dicoding.picodiploma.loginwithanimation.data.repository.UserRepository
+import com.dicoding.picodiploma.loginwithanimation.response.ListStoryItem
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: UserRepository) : ViewModel() {
@@ -20,5 +23,7 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun getStory(token: String) = repository.getStory(token)
+    fun getStory(token: String): LiveData<PagingData<ListStoryItem>> =
+        repository.getStory(token).cachedIn(viewModelScope)
+
 }

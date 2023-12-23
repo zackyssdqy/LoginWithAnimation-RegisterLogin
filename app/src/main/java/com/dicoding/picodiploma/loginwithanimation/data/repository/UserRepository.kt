@@ -1,13 +1,18 @@
 package com.dicoding.picodiploma.loginwithanimation.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.dicoding.picodiploma.loginwithanimation.Paging
 import com.dicoding.picodiploma.loginwithanimation.Result
 import com.dicoding.picodiploma.loginwithanimation.api.ApiService
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserModel
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
+import com.dicoding.picodiploma.loginwithanimation.response.ListStoryItem
 import com.dicoding.picodiploma.loginwithanimation.response.LoginResponse
 import com.dicoding.picodiploma.loginwithanimation.response.SignupResponse
 import com.dicoding.picodiploma.loginwithanimation.response.StoryResponse
@@ -51,19 +56,15 @@ class UserRepository private constructor(
         }
     }
 
-    fun getStory(token: String) = liveData {
-        emit(Result.Loading)
-        try {
-            val successResponse = apiService.getStories(token)
-            if (successResponse.error == false) {
-                emit(Result.Success(successResponse))
-            } else {
-                emit(Result.Error(successResponse.message ?: "Kesalahan tidak diketahui"))
+    fun getStory(token: String): LiveData<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 4
+            ),
+            pagingSourceFactory = {
+                Paging(token, apiService)
             }
-        } catch (e: Exception) {
-            Log.d("ListStory", "getStory: ${e.message.toString()} ")
-            emit(Result.Error(e.message.toString()))
-        }
+        ).liveData
     }
 
     fun uploadStory(token: String, imageFile: File, description: String) = liveData {
@@ -88,11 +89,11 @@ class UserRepository private constructor(
 
     private val _StoryWithLocation = MutableLiveData<StoryResponse>()
     val StoryWithLocation: LiveData<StoryResponse> = _StoryWithLocation
-    fun getStoriesByMap(token : String) = liveData {
+    fun getStoriesByMap(token: String) = liveData {
         emit(Result.Loading)
 
         try {
-            val storyResponse: StoryResponse = apiService.getStoriesWithLocation()
+            val storyResponse: StoryResponse = apiService.getStoriesWithLocation("Bearer $token")
 
             emit(Result.Success(storyResponse))
         } catch (e: HttpException) {
